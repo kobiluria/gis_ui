@@ -6,10 +6,10 @@ import requests
 
 
 def index(request):
-    file = open('/home/kobi/projects/open_gis/the_map/THEMAP.geojson','r+')
+    haifa = open('/home/kobi/projects/open_gis/maps/israel/haifa.geojson','r+')
+    the_center = open('/home/kobi/projects/open_gis/maps/israel/the_center.geojson','r+')
     #result = requests.get('http://kobiluria.github.io/open_entity_gis/maps/israel/the_south/arad.geojson')
-    result = file.read()
     #context = {'geo_data':result.text}
-    context = {'geo_data':result}
+    context = {'haifa':haifa.read(),'the_center':the_center.read()}
     template = TemplateResponse(request,'map/index.html',context)
     return HttpResponse(template.render())

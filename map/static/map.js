@@ -1,11 +1,52 @@
+alert(haifa)
 
-var leaflet_map = L.map('map').setView([31.768942802505826, 35.21461486816406], 9);
-L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-    maxZoom: 20,
+
+var haifa_district = L.geoJson(haifa, {
+    style: style,
+    onEachFeature: onEachFeature,
+    filter: filter_muni
+});
+
+var the_center_district = L.geoJson(the_center, {
+    style: style,
+    onEachFeature: onEachFeature,
+    filter: filter_muni
+});
+
+
+cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+    cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+
+var minimal = L.tileLayer(cmUrl, {
+    styleId: 22677,
+    attribution: cmAttr
+}),
+    midnight = L.tileLayer(cmUrl, {
+        styleId: 999,
+        attribution: cmAttr
+    });
+
+var leaflet_map = L.map('map', {
+    center: new L.LatLng(31.768942802505826, 35.21461486816406),
+    zoom: 9,
+    layers: [minimal, haifa_district ,the_center_district],
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-}).addTo(leaflet_map);
+});
 
-var geojson;
+
+var baseMaps = {
+    "Minimal": minimal,
+    "Night View": midnight
+};
+
+var overlayMaps = {
+    "haifa":haifa_district,
+        "the center" : the_center_district
+};
+
+
+L.control.layers(baseMaps, overlayMaps,{position: 'topleft',collapsed:false}).addTo(leaflet_map);
+
 var user_select = 4;
 var info;
 
@@ -46,28 +87,13 @@ function highlightFeature(e) {
     }
     info.update(layer.feature.properties);
 }
-function resetHighlight(e) {
-    geojson.resetStyle(e.target);
-    info.update();
-}
 
 function zoomToFeature(e) {
     leaflet_map.fitBounds(e.target.getBounds());
 }
 
 function filter_muni(feature,layer){
-    if (feature.properties.id == 1 ){
-        return false
-    }
-    if (feature.properties.id <= 7 ){
-        return false
-    }
-
-    if (feature.properties.division_id == user_select){
-        return true;
-    }
-
-    else return false
+   return true
 }
 function onEachFeature(feature, layer) {
     if(feature.properties.id == 1){
@@ -75,16 +101,11 @@ function onEachFeature(feature, layer) {
     }
     layer.on({
         mouseover: highlightFeature,
-        mouseout: resetHighlight,
+        
         click: zoomToFeature
     });
 }
 
-geojson = L.geoJson(geo_data, {
-    style: style,
-    onEachFeature: onEachFeature,
-    filter: filter_muni
-}).addTo(leaflet_map);
 
 
 var info = L.control();

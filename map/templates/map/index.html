@@ -15,7 +15,9 @@
 <body>
 <H1>   Map of munis Israel </H1>
     <div id="map" class="leaflet-container leaflet-fade-anim" style="width: 1000px; height: 1000px; position: relative;" tabindex="0"> … </div>
-    <script>this.geo_data = {{ geo_data|safe }};
+    <script>
+        this.haifa = {{ haifa|safe }};
+        this.the_center = {{ the_center|safe }};
 
     loadjscssfile("/static/map.js", "js"); //dynamically load and add this .js file
     </script>
