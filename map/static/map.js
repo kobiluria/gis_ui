@@ -88,6 +88,13 @@ function highlightFeature(e) {
     info.update(layer.feature.properties);
 }
 
+function resetHighlight(e){
+        for( var i in overlayMaps){
+        overlayMaps[i].resetStyle(e.target);
+	    info.update();
+        }
+}
+
 function zoomToFeature(e) {
     leaflet_map.fitBounds(e.target.getBounds());
 }
@@ -101,7 +108,7 @@ function onEachFeature(feature, layer) {
     }
     layer.on({
         mouseover: highlightFeature,
-        
+        mouseout: resetHighlight,
         click: zoomToFeature
     });
 }
