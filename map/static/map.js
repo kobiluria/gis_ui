@@ -1,5 +1,3 @@
-alert(haifa)
-
 
 var haifa_district = L.geoJson(haifa, {
     style: style,
@@ -95,8 +93,8 @@ function resetHighlight(e){
         }
 }
 
-function zoomToFeature(e) {
-    leaflet_map.fitBounds(e.target.getBounds());
+    function zoomToFeature(e) {
+        leaflet_map.fitBounds(e.target.getBounds());
 }
 
 function filter_muni(feature,layer){
@@ -146,3 +144,8 @@ legend.update = function(props){
 }
 
 legend.addTo(leaflet_map)
+
+leaflet_map.on('click', function(e) {
+    alert(e.latlng);
+});
+L.control.mousePosition().addTo(leaflet_map);
