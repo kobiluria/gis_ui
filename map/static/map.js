@@ -1,15 +1,38 @@
 
+HOME_URL = 'http://kobiluria.github.io/open_entity_gis/jsonp/maps/'
+
+var geojson;
+
+function get_jsonp(url){
+$.ajax({
+                    url: url,
+                    dataType: 'jsonp',
+                    success: function(data){
+                        self._otherMethod = function(data){
+                            return function(){
+                            geojson = data;
+                            }
+                        }
+                    }
+});
+}
+
+
+function map_func(json){
+    return json
+}
 var haifa_district = L.geoJson(haifa, {
     style: style,
     onEachFeature: onEachFeature,
     filter: filter_muni
 });
-
+alert(geojson)
 var the_center_district = L.geoJson(the_center, {
     style: style,
     onEachFeature: onEachFeature,
     filter: filter_muni
 });
+
 
 
 cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
@@ -27,10 +50,11 @@ var minimal = L.tileLayer(cmUrl, {
 var leaflet_map = L.map('map', {
     center: new L.LatLng(31.768942802505826, 35.21461486816406),
     zoom: 9,
-    layers: [minimal, haifa_district ,the_center_district],
+    layers: [minimal, haifa_district],
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
 });
 
+the_center = '';
 
 var baseMaps = {
     "Minimal": minimal,
@@ -47,6 +71,13 @@ L.control.layers(baseMaps, overlayMaps,{position: 'topleft',collapsed:false}).ad
 
 var user_select = 4;
 var info;
+
+legend.addTo(leaflet_map)
+
+leaflet_map.on('click', function(e) {
+    alert(e.latlng);
+});
+L.control.mousePosition().addTo(leaflet_map);
 
 function getColor(d) {
     return d > 500  ? '#BD0026' :
@@ -143,9 +174,3 @@ legend.update = function(props){
  this._div.innerHTML = '<h4>US Population Density</h4>';
 }
 
-legend.addTo(leaflet_map)
-
-leaflet_map.on('click', function(e) {
-    alert(e.latlng);
-});
-L.control.mousePosition().addTo(leaflet_map);
